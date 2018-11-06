@@ -70,6 +70,17 @@ async function testInvalid() {
   }));
 }
 
+async function testInvalidimportModuleDynamically() {
+  let threw = false;
+  try {
+    new SourceTextModule('import("foo")', { importModuleDynamically: false });
+  } catch (err) {
+    threw = true;
+    assert.strictEqual(err.code, 'ERR_INVALID_ARG_TYPE');
+  }
+  assert(threw);
+}
+
 const done = common.mustCallAtLeast(3);
 (async function() {
   await testNoCallback();
@@ -79,5 +90,8 @@ const done = common.mustCallAtLeast(3);
   done();
 
   await testInvalid();
+  done();
+
+  await testInvalidimportModuleDynamically();
   done();
 }()).then(common.mustCall());
